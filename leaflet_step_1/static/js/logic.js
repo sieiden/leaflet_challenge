@@ -10,16 +10,29 @@ function createMap(data){
   let earthquakeMarkers = [];
   data.features.forEach((earthquake)=>{
     let location = [earthquake.geometry.coordinates[1], earthquake.geometry.coordinates[0]]
-    earthquakeMarkers.push(
-      L.circle(location,{
-        stoke: false,
-        fillOpacity: 0.75,
-        color: "white",
-        fillColor: "purple",
-        radius: earthquake.geometry.coordinates[2]*1500
-      })
-      .bindPopup(`<h3>${earthquake.properties.place}<hr> ${Date(earthquake.properties.time)}`)
-    );
+    let ecolor = "";
+    let depth = earthquake.geometry.coordinates[2];
+    if (depth >= 90){
+      ecolor = "#FF0000"
+    }else if (depth<90 && depth>=70){
+      ecolor = "#ff6600"
+    }else if (depth<70 && depth>=50){
+      ecolor = "#FFCC00"
+    }else if (depth<50 && depth>=30){
+      ecolor = "#99ff00"
+    }else if (depth<30 && depth>=10){
+      ecolor = "#33ff00"
+    }else{
+      ecolor = "#00FF00"
+    }
+  earthquakeMarkers.push(L.circle(location,{
+      stoke: false,
+      fillOpacity: 0.75,
+      color: ecolor,
+      fillColor: ecolor,
+      radius: earthquake.geometry.coordinates[2]*1500
+    })
+    .bindPopup(`<h3>${earthquake.properties.place}<hr> ${Date(earthquake.properties.time)}`))
   });
   let baseMaps = {
     "Streets": streetmap
