@@ -16,7 +16,7 @@ function createMap(data){
         fillOpacity: 0.75,
         color: "white",
         fillColor: "purple",
-        radius: 1000000
+        radius: earthquake.geometry.coordinates[2]*1500
       })
       .bindPopup(`<h3>${earthquake.properties.place}<hr> ${Date(earthquake.properties.time)}`)
     );
@@ -31,7 +31,7 @@ function createMap(data){
   let myMap = L.map("mapid", {
     center: [15.5994, -28.6731],
     zoom: 2.5,
-    layers: [streetmap]
+    layers: [streetmap, earthquakeLayer]
   });
   L.control.layers(baseMaps, overlayMaps).addTo(myMap);
 }
