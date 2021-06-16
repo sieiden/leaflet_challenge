@@ -1,5 +1,7 @@
 function createMap(data){
   console.log(data);
+
+  //add all of the tile layers for the map
   let streetmap = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
     attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
     tileSize: 512,
@@ -25,7 +27,7 @@ function createMap(data){
     accessToken: API_KEY
   });
 
-
+  //create the earthquake circles using depth and magnitude
   let earthquakeMarkers = [];
   data.features.forEach((earthquake)=>{
     let location = [earthquake.geometry.coordinates[1], earthquake.geometry.coordinates[0]]
@@ -55,22 +57,33 @@ function createMap(data){
     })
     .bindPopup(`<h3>${earthquake.properties.place}<hr> ${Date(earthquake.properties.time)}`))
   });
+
+  //set the baseMap
   let baseMaps = {
     "Streets": streetmap,
     "Satellite": satellite,
     "Dark": darkmap
   };
+
+  //add the earthquake layer
   let earthquakeLayer = L.layerGroup(earthquakeMarkers);
+
+  //set the overlay
   let overlayMaps = {
     "Earthquakes": earthquakeLayer
   };
+
+  //create a map object
   let myMap = L.map("map", {
     center: [15.5994, -28.6731],
     zoom: 2.5,
     layers: [streetmap, earthquakeLayer]
   });
+
+  //add the control panel to the map
   L.control.layers(baseMaps, overlayMaps,{collapsed:false}).addTo(myMap);
   
+  //create a legend
   let breaks = [-10,10,30,50,70,90]
   let labels = ["-10-10","10-30","30-50","50-70","70-90","90+"]
 
@@ -99,6 +112,8 @@ function createMap(data){
   legend.addTo(myMap);
 }
 
+//create a URL object
 let queryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson"
 
+//call the data from the API and feed it into the createMap function
 d3.json(queryUrl).then(createMap);
