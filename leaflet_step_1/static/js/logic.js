@@ -1,7 +1,7 @@
 function createMap(data){
   console.log(data);
 
-  //add all of the tile layers for the map
+  //add the tile layer for the map
   let streetmap = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
     attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
     tileSize: 512,
@@ -10,22 +10,6 @@ function createMap(data){
     id: "mapbox/streets-v11",
     accessToken: API_KEY
   })
-
-  let satellite = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
-    attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
-    tileSize: 512,
-    maxZoom: 18,
-    zoomOffset: -1,
-    id: "mapbox/satellite-v9",
-    accessToken: API_KEY
-  })
-
-  let darkmap = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
-    attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
-    maxZoom: 18,
-    id: "dark-v10",
-    accessToken: API_KEY
-  });
 
   //create the earthquake circles using depth and magnitude
   let earthquakeMarkers = [];
@@ -60,9 +44,7 @@ function createMap(data){
 
   //set the baseMap
   let baseMaps = {
-    "Streets": streetmap,
-    "Satellite": satellite,
-    "Dark": darkmap
+    "Streets": streetmap
   };
 
   //add the earthquake layer
@@ -74,14 +56,11 @@ function createMap(data){
   };
 
   //create a map object
-  let myMap = L.map("mapid", {
+  let myMap = L.map("map", {
     center: [15.5994, -28.6731],
     zoom: 2.5,
     layers: [streetmap, earthquakeLayer]
   });
-
-  //add the control panel to the map
-  L.control.layers(baseMaps, overlayMaps,{collapsed:false}).addTo(myMap);
   
   //create a legend
   let breaks = [-10,10,30,50,70,90]
