@@ -61,34 +61,7 @@ function createMap(data){
     zoom: 2.5,
     layers: [streetmap, earthquakeLayer]
   });
-  
-  //create a legend
-  let breaks = [-10,10,30,50,70,90]
-  let labels = ["-10-10","10-30","30-50","50-70","70-90","90+"]
 
-  function getColor(d){
-    return d > breaks[5] ? "#FF0000":
-    d<breaks[5] && d>=breaks[4] ? "#ff6600":
-    d<breaks[4] && d>=breaks[3] ? "#ffcc00":
-    d<breaks[3] && d>=breaks[2] ? "#99ff00":
-    d<breaks[2] && d>=breaks[1] ? "#33ff00":
-    "#00FF00"
-  }
-
-  let legend = L.control({position:"bottomright"});
-  legend.onAdd = function(map){
-    let div = L.DomUTil.create('div','info legend');
-    for (let i = 0; i<breaks.length; i++){
-      div.innterHTML +=
-      '<i style="background:' +
-      getColor(breaks[i]) + '"></i ' +
-      labels[i] + (breaks ? ' ' + '<br>' : '')
-    }
-    return div;
-  };
-
-  // Adding legend to the map
-  legend.addTo(myMap);
 }
 
 //create a URL object
