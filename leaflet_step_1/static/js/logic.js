@@ -74,7 +74,7 @@ function createMap(data){
   };
 
   //create a map object
-  let myMap = L.map("map", {
+  let myMap = L.map("mapid", {
     center: [15.5994, -28.6731],
     zoom: 2.5,
     layers: [streetmap, earthquakeLayer]
