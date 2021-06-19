@@ -35,28 +35,14 @@ function createMap(data){
   let earthquakeMarkers = [];
   data.features.forEach((earthquake)=>{
     let location = [earthquake.geometry.coordinates[1], earthquake.geometry.coordinates[0]]
-    let ecolor = "";
     let depth = earthquake.geometry.coordinates[2];
     let magnitude = earthquake.properties.mag;
-    let eradius = parseInt(magnitude * 20000)
-    if (depth >= 90){
-      ecolor = "#FF0000"
-    }else if (depth<90 && depth>=70){
-      ecolor = "#ff6600"
-    }else if (depth<70 && depth>=50){
-      ecolor = "#FFCC00"
-    }else if (depth<50 && depth>=30){
-      ecolor = "#99ff00"
-    }else if (depth<30 && depth>=10){
-      ecolor = "#33ff00"
-    }else{
-      ecolor = "#00FF00"
-    }
+    let eradius = magnitude * 20000
   earthquakeMarkers.push(L.circle(location,{
       stoke: false,
       fillOpacity: 0.75,
-      color: ecolor,
-      fillColor: ecolor,
+      color: circleColor(depth),
+      fillColor: circleColor(depth),
       radius: eradius
     })
     .bindPopup(`<h3>${earthquake.properties.place}<hr> ${Date(earthquake.properties.time)}`))
@@ -77,6 +63,45 @@ function createMap(data){
     layers: [streetmap, earthquakeLayer]
   });
   L.control.layers(baseMaps, overlayMaps,{collapsed:false}).addTo(myMap);
+
+  // Legend Control
+  var legend = L.control({position: 'bottomright'});
+
+  legend.onAdd = function (map) {
+   
+      // create div to hold legend
+      var div = L.DomUtil.create('div', 'info legend'),
+          grades = [-10,10,30,50,70,90]
+      // loop through our density intervals and generate a label with a colored square for each interval
+      for (var i = 0; i < grades.length; i++) {
+          div.innerHTML +=
+              '<i style="background:' + circleColor(grades[i] + 1) + '"></i> ' +
+              grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+      }
+
+      return div;
+  };
+
+  // add legend to map
+  legend.addTo(myMap);
+
+  //function to color circles based on earthquake depth
+  function circleColor(depth) {
+    if (depth >= 90) {
+        color = "#FF0000";
+    } else if (depth < 90 && depth >= 70) {
+        color = "#ff6600";
+    } else if (depth < 70 && depth >= 50) {
+        color = "#FFCC00";
+    } else if (depth < 50 && depth >= 30){
+        color = "#99ff00";
+    } else if (depth < 30 && depth >= 10){
+        color = "#33ff00"
+    } else{
+        color = "#00FF00"
+    }
+    return color; 
+  };
 };
 
 let queryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson"

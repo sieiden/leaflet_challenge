@@ -15,7 +15,6 @@ function createMap(data){
   let earthquakeMarkers = [];
   data.features.forEach((earthquake)=>{
     let location = [earthquake.geometry.coordinates[1], earthquake.geometry.coordinates[0]]
-    let ecolor = "";
     let depth = earthquake.geometry.coordinates[2];
     let magnitude = earthquake.properties.mag;
     let eradius = magnitude * 20000
@@ -52,10 +51,9 @@ function createMap(data){
   // Legend Control
   var legend = L.control({position: 'bottomright'});
 
-  // create function to change colors of circles based on data breakpoints defined in grades array
   legend.onAdd = function (map) {
    
-      // create array to hold grades that will be used as breakpoints to change colors of different circles
+      // create div to hold legend
       var div = L.DomUtil.create('div', 'info legend'),
           grades = [-10,10,30,50,70,90]
       // loop through our density intervals and generate a label with a colored square for each interval
@@ -71,6 +69,7 @@ function createMap(data){
   // add legend to map
   legend.addTo(myMap);
 
+  //function to color circles based on depth
   function circleColor(depth) {
     if (depth >= 90) {
         color = "#FF0000";
